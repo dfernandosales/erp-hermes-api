@@ -3,11 +3,12 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import { Application } from '../declarations';
 import { HookReturn } from 'sequelize/types/lib/hooks';
+import { BaseModel } from './common';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   const users = sequelizeClient.define('users', {
-  
+    ...BaseModel,
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -17,8 +18,14 @@ export default function (app: Application): typeof Model {
       type: DataTypes.STRING,
       allowNull: false
     },
-  
-  
+    name:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    role:{
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     hooks: {
       beforeCount(options: any): HookReturn {
