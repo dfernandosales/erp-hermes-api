@@ -4,6 +4,7 @@ import { Sequelize, DataTypes, Model } from 'sequelize';
 import { Application } from '../declarations';
 import { HookReturn } from 'sequelize/types/lib/hooks';
 import { BaseModel } from './common';
+import { RoleUsuario } from './enum/usuario.enum';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
@@ -24,7 +25,12 @@ export default function (app: Application): typeof Model {
     },
     role:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      values: Object.keys(RoleUsuario),
+        defaultValue: RoleUsuario.FUNC,
+        validate: {
+          isIn: [Object.keys(RoleUsuario)],
+        },
     }
   }, {
     hooks: {
