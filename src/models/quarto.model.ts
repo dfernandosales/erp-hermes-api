@@ -1,5 +1,3 @@
-// See http://docs.sequelizejs.com/en/latest/docs/models-definition/
-// for more of what you can do here.
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import { Application } from '../declarations';
 import { HookReturn } from 'sequelize/types/lib/hooks';
@@ -7,17 +5,23 @@ import { BaseModel } from './common';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const categoriaQuarto = sequelizeClient.define('categoria_quarto', {
+  const quarto = sequelizeClient.define('quarto', {
     ...BaseModel,
-    nome: {
-      type: DataTypes.STRING,
+    numero: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'nome_categoria',
+      field: 'numero_quarto',
     },
-    valor: {
-      type: DataTypes.DOUBLE,
+    vacancia: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      field: 'valor'
+      defaultValue: true,
+      field: 'vacancia',
+    },
+    categoriaQuartoId: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      field: 'categoria_quarto_id',
     },
   }, {
     hooks: {
@@ -27,14 +31,13 @@ export default function (app: Application): typeof Model {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (categoriaQuarto as any).associate = function (models: any): void {
-    categoriaQuarto.hasMany(models.quarto,
+  (quarto as any).associate = function (models: any): void {
+    quarto.belongsTo(models.categoria_quarto,
     {
       foreignKey: 'categoriaQuartoId',
-      as: 'quarto'
-    });
+      as: 'categoriaQuarto'
+    }); 
   };
 
-  return categoriaQuarto;
+  return quarto;
 }
