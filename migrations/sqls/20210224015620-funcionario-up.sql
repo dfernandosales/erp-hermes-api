@@ -16,7 +16,7 @@ CREATE TABLE  public.funcionario (
   turno_trabalho TEXT NOT NULL,
   rua TEXT NOT NULL,
   bairro TEXT NOT NULL,
-  numEndereco TEXT NOT NULL,
+  num_endereco TEXT NOT NULL,
   complemento TEXT NULL,
   cep TEXT NOT NULL,
   cidade TEXT NOT NULL,

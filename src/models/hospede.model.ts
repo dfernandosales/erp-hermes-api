@@ -61,7 +61,8 @@ export default function (app: Application): typeof Model {
     },
     numEndereco: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      field: "num_endereco"
     },
     complemento: {
       type: DataTypes.STRING,
