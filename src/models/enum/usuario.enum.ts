@@ -4,14 +4,14 @@ export enum RoleUsuario {
   }
 
 export enum Genero {
-  MASC = "MASCULINO",
-  FEM = "FEMININO",
+  MASCULINO = "MASCULINO",
+  FEMININO = "FEMININO",
   OUTROS = "OUTROS",
 }
 
 export enum EstadoCivil {
-  CAS = "CASADO",
-  SOL = "SOLTEIRO",
+  CASADO = "CASADO",
+  SOLTEIRO = "SOLTEIRO",
   VIUVO = "VIUVO",
-  DIV = "DIVORCIADO"
+  DIVORCIADO = "DIVORCIADO"
 }
