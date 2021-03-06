@@ -5,17 +5,12 @@ import { BaseModel } from './common';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const categoriaQuarto = sequelizeClient.define('categoria_quarto', {
+  const itemQuarto = sequelizeClient.define('item_quarto', {
     ...BaseModel,
     nome: {
       type: DataTypes.STRING,
-      allowNull: false,
-      field: 'nome_categoria',
-    },
-    valor: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-      field: 'valor'
+      field:"nome_item",
+      allowNull: false
     },
   }, {
     hooks: {
@@ -25,17 +20,12 @@ export default function (app: Application): typeof Model {
     }
   });
 
-  (categoriaQuarto as any).associate = function (models: any): void {
-    categoriaQuarto.hasMany(models.quarto,
-    {
-      foreignKey: 'categoriaQuartoId',
-      as: 'quarto'
-    });
-    categoriaQuarto.hasMany(models.categoria_item_quarto, {
-      foreignKey: "categoriaQuartoId",
+  (itemQuarto as any).associate = function (models: any): void {
+    itemQuarto.hasMany(models.categoria_item_quarto, {
+      foreignKey: "itemQuartoId",
       as: "categoriaItemQuarto",
     });
   };
 
-  return categoriaQuarto;
+  return itemQuarto;
 }

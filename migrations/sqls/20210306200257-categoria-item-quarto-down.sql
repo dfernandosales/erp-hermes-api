@@ -1,0 +1,1 @@
+DROP TABLE public.categoria_item_quarto CASCADE;
