@@ -1,12 +1,25 @@
 import * as authentication from '@feathersjs/authentication';
+import { HookContext } from '@feathersjs/feathers';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
 
+const includeRelacoesFind = (context: HookContext) => {
+  context.params.sequelize = {
+    include: [{
+      association: 'categoriaItemQuarto',
+    },
+    ],
+    raw: false,
+  };
+  return context;
+};
+
+
 export default {
   before: {
-    all: [ authenticate('jwt') ],
-    find: [],
+    all: [authenticate('jwt')],
+    find: [includeRelacoesFind],
     get: [],
     create: [],
     update: [],

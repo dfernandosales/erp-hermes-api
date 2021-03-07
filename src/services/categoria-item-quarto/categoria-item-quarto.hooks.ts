@@ -1,5 +1,6 @@
 import * as authentication from '@feathersjs/authentication';
-import { HookContext } from '../../app';
+import { BadRequest } from '@feathersjs/errors';
+import { HookContext } from '@feathersjs/feathers';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -8,7 +9,7 @@ const { authenticate } = authentication.hooks;
 const includeRelacoesFind = (context: HookContext) => {
   context.params.sequelize = {
     include: [{
-      association: 'categoria', 
+      association: 'categoria',  
     }, 
     {
       association: 'item'
@@ -18,12 +19,30 @@ const includeRelacoesFind = (context: HookContext) => {
   return context;
 };
 
+const verificaUnico = () => async (context: HookContext) => {
+  const { itemQuartoId } = context.data;
+  if (itemQuartoId) {
+    const query: any = {
+      itemQuartoId,
+      allowDeletedAt: true,
+    };
+    if (context.id) {
+      query.id = { $ne: context.id };
+    }
+    const currentUsers = await context.service.find({ query });
+    if (currentUsers.total) {
+      throw new BadRequest("Item já adicionado nessa categoria.");
+    }
+  }
+  return context;
+};
+
 export default {
   before: {
     all: [ authenticate('jwt') ],
     find: [includeRelacoesFind],
     get: [includeRelacoesFind],
-    create: [],
+    create: [verificaUnico()],
     update: [],
     patch: [],
     remove: []
