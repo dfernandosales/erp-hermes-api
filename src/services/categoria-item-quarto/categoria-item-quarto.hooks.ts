@@ -1,27 +1,29 @@
 import * as authentication from '@feathersjs/authentication';
 import { BadRequest } from '@feathersjs/errors';
 import { HookContext } from '@feathersjs/feathers';
-import { Op } from "sequelize";
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
 
+
 const includeRelacoesFind = (context: HookContext) => {
   context.params.sequelize = {
     include: [{
-      association: 'categoriaItemQuarto',
-    },
-    ],
+      association: 'categoria',  
+    }, 
+    {
+      association: 'item'
+    }],
     raw: false,
   };
   return context;
 };
 
 const verificaUnico = () => async (context: HookContext) => {
-  const { nome } = context.data;
-  if (nome) {
+  const { itemQuartoId } = context.data;
+  if (itemQuartoId) {
     const query: any = {
-      nome: { [Op.iLike]: nome },
+      itemQuartoId,
       allowDeletedAt: true,
     };
     if (context.id) {
@@ -29,7 +31,7 @@ const verificaUnico = () => async (context: HookContext) => {
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("Já existem uma categoria com esse nome na base de dados.");
+      throw new BadRequest("Item já adicionado nessa categoria.");
     }
   }
   return context;
@@ -37,9 +39,9 @@ const verificaUnico = () => async (context: HookContext) => {
 
 export default {
   before: {
-    all: [authenticate('jwt')],
+    all: [ authenticate('jwt') ],
     find: [includeRelacoesFind],
-    get: [],
+    get: [includeRelacoesFind],
     create: [verificaUnico()],
     update: [verificaUnico()],
     patch: [],
