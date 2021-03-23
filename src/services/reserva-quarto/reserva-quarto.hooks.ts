@@ -8,50 +8,44 @@ const { authenticate } = authentication.hooks;
 const includeRelacoesFind = (context: HookContext) => {
   context.params.sequelize = {
     include: [{
-      association: 'categoriaQuarto'
-    }],
+      association: 'quarto', include: [{association:"categoriaQuarto"}]
+    },
+    {
+      association: 'reserva',
+    },
+    ],
     raw: false,
   };
   return context;
 };
 
 const verificaUnico = async (context: HookContext) => {
-  const { numero } = context.data;
-  if (numero) {
+  const { quartoId } = context.data;
+  if (quartoId) {
     const query: any = {
-      numero: numero,
+      quartoId,
+      allowDeletedAt: true,
     };
     if (context.id) {
       query.id = { $ne: context.id };
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("Ja existe quarto com esse numero.");
+      throw new BadRequest("O quarto selecionado ja foi adicionado na reserva.");
     }
   }
   return context;
 };
 
+const changeQuartoStatus = async (context: HookContext) => {
+  const quartoService = context.app.service("quarto");
+  quartoService.patch(context.result.quartoId,{vacancia:false})
+};
 
-const generateQuartoNumber = async (context: HookContext) => {
-  const lastQuartoNumber = await context.service.find({
-    query: {
-      $limit: 1, $sort: {
-        createdAt: -1
-      }
-    }
-  })
-  if (lastQuartoNumber.total > 0) {
-    context.data.numero = +lastQuartoNumber.data[0].numero + 1;
-  } else {
-    context.data.numero = 1;
-  }
-  return context;
-}
 
 export default {
   before: {
-    all: [authenticate('jwt')],
+    all: [ authenticate('jwt') ],
     find: [includeRelacoesFind],
     get: [includeRelacoesFind],
     create: [verificaUnico],
@@ -64,7 +58,7 @@ export default {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [changeQuartoStatus],
     update: [],
     patch: [],
     remove: []

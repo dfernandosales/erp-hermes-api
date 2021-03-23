@@ -91,10 +91,11 @@ export default function (app: Application): typeof Model {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (hospede as any).associate = function (models: any): void {
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
+    hospede.hasMany(models.reserva_hospede, {
+      foreignKey: "hospedeId",
+      as: "reservaHospede",
+    });
   };
 
   return hospede;

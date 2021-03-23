@@ -1,0 +1,1 @@
+DROP TABLE public.reserva_hospede CASCADE;
