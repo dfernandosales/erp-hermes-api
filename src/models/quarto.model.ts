@@ -36,6 +36,10 @@ export default function (app: Application): typeof Model {
     {
       foreignKey: 'categoriaQuartoId',
       as: 'categoriaQuarto'
+    });
+    quarto.hasMany(models.reserva_quarto, {
+      foreignKey: "quartoId",
+      as: "reservaQuarto",
     }); 
   };
 

@@ -5,6 +5,12 @@ import hospede from './hospede/hospede.service';
 import estados from './estados/estados.service';
 import categoriaQuarto from './categoria-quarto/categoria-quarto.service';
 import quarto from './quarto/quarto.service';
+import itemQuarto from './item-quarto/item-quarto.service';
+import categoriaItemQuarto from './categoria-item-quarto/categoria-item-quarto.service';
+import reserva from './reserva/reserva.service';
+import reservaQuarto from './reserva-quarto/reserva-quarto.service';
+import reservaHospede from './reserva-hospede/reserva-hospede.service';
+import ocupacaoChart from './ocupacao-chart/ocupacao-chart.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application): void {
@@ -14,4 +20,10 @@ export default function (app: Application): void {
   app.configure(estados);
   app.configure(categoriaQuarto);
   app.configure(quarto);
+  app.configure(itemQuarto);
+  app.configure(categoriaItemQuarto);
+  app.configure(reserva)
+  app.configure(reservaQuarto)
+  app.configure(reservaHospede)
+  app.configure(ocupacaoChart);
 }

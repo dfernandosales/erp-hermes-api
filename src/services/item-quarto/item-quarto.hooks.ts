@@ -6,16 +6,6 @@ import { Op } from "sequelize";
 
 const { authenticate } = authentication.hooks;
 
-const includeRelacoesFind = (context: HookContext) => {
-  context.params.sequelize = {
-    include: [{
-      association: 'categoriaItemQuarto',
-    },
-    ],
-    raw: false,
-  };
-  return context;
-};
 
 const verificaUnico = () => async (context: HookContext) => {
   const { nome } = context.data;
@@ -29,16 +19,15 @@ const verificaUnico = () => async (context: HookContext) => {
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("Já existem uma categoria com esse nome na base de dados.");
+      throw new BadRequest("Já existem um item com esse nome na base de dados");
     }
   }
   return context;
 };
-
 export default {
   before: {
     all: [authenticate('jwt')],
-    find: [includeRelacoesFind],
+    find: [],
     get: [],
     create: [verificaUnico()],
     update: [verificaUnico()],

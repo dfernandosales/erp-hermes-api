@@ -8,64 +8,65 @@ const { authenticate } = authentication.hooks;
 const includeRelacoesFind = (context: HookContext) => {
   context.params.sequelize = {
     include: [{
-      association: 'categoriaQuarto'
-    }],
+      association: 'quarto', include: [{association:"categoriaQuarto"}]
+    },
+    {
+      association: 'reserva',
+    },
+    ],
     raw: false,
   };
   return context;
 };
 
 const verificaUnico = async (context: HookContext) => {
-  const { numero } = context.data;
-  if (numero) {
+  const { quartoId, reservaId } = context.data;
+  if (quartoId) {
     const query: any = {
-      numero: numero,
+      quartoId,
+      reservaId
     };
     if (context.id) {
       query.id = { $ne: context.id };
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("Ja existe quarto com esse numero.");
+      throw new BadRequest("O quarto selecionado ja foi adicionado na reserva.");
     }
   }
   return context;
 };
 
+const changeQuartoStatusToOcupado = async (context: HookContext) => {
+  const quartoService = context.app.service("quarto");
+  quartoService.patch(context.result.quartoId,{vacancia:false})
+};
 
-const generateQuartoNumber = async (context: HookContext) => {
-  const lastQuartoNumber = await context.service.find({
-    query: {
-      $limit: 1, $sort: {
-        createdAt: -1
-      }
-    }
-  })
-  if (lastQuartoNumber.total > 0) {
-    context.data.numero = +lastQuartoNumber.data[0].numero + 1;
-  } else {
-    context.data.numero = 1;
-  }
-  return context;
-}
+const changeQuartoStatusToVago = async (context: HookContext) => {
+  const quartoService = context.app.service("quarto");
+  const relation = await context.service._get(Number(context.id));
+  console.log(relation)
+  await quartoService.patch(relation.quartoId,{vacancia:true})
+};
+
 
 export default {
   before: {
-    all: [authenticate('jwt')],
+    all: [ authenticate('jwt') ],
     find: [includeRelacoesFind],
     get: [includeRelacoesFind],
     create: [verificaUnico],
     update: [verificaUnico],
     patch: [],
-    remove: []
+    remove: [changeQuartoStatusToVago]
   },
 
   after: {
     all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
+    create: [changeQuartoStatusToOcupado],
+    update: [changeQuartoStatusToOcupado],
     patch: [],
     remove: []
   },
