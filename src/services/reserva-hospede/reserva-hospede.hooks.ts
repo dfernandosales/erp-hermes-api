@@ -27,7 +27,6 @@ const verificaUnico = async (context: HookContext) => {
     const query: any = {
       hospedeId,
       reservaId,
-      allowDeletedAt: false,
     };
     if (context.id) {
       query.id = { $ne: context.id };

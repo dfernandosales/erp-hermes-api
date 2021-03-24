@@ -20,11 +20,11 @@ const includeRelacoesFind = (context: HookContext) => {
 };
 
 const verificaUnico = async (context: HookContext) => {
-  const { quartoId } = context.data;
+  const { quartoId, reservaId } = context.data;
   if (quartoId) {
     const query: any = {
       quartoId,
-      allowDeletedAt: true,
+      reservaId
     };
     if (context.id) {
       query.id = { $ne: context.id };
@@ -37,9 +37,16 @@ const verificaUnico = async (context: HookContext) => {
   return context;
 };
 
-const changeQuartoStatus = async (context: HookContext) => {
+const changeQuartoStatusToOcupado = async (context: HookContext) => {
   const quartoService = context.app.service("quarto");
   quartoService.patch(context.result.quartoId,{vacancia:false})
+};
+
+const changeQuartoStatusToVago = async (context: HookContext) => {
+  const quartoService = context.app.service("quarto");
+  const relation = await context.service._get(Number(context.id));
+  console.log(relation)
+  await quartoService.patch(relation.quartoId,{vacancia:true})
 };
 
 
@@ -51,15 +58,15 @@ export default {
     create: [verificaUnico],
     update: [verificaUnico],
     patch: [],
-    remove: []
+    remove: [changeQuartoStatusToVago]
   },
 
   after: {
     all: [],
     find: [],
     get: [],
-    create: [changeQuartoStatus],
-    update: [],
+    create: [changeQuartoStatusToOcupado],
+    update: [changeQuartoStatusToOcupado],
     patch: [],
     remove: []
   },
