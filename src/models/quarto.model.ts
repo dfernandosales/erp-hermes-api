@@ -33,13 +33,13 @@ export default function (app: Application): typeof Model {
 
   (quarto as any).associate = function (models: any): void {
     quarto.belongsTo(models.categoria_quarto,
-    {
-      foreignKey: 'categoriaQuartoId',
-      as: 'categoriaQuarto'
-    });
+      {
+        foreignKey: 'categoriaQuartoId',
+        as: 'categoriaQuarto'
+      });
     quarto.hasMany(models.reserva_quarto, {
-      foreignKey: "quartoId",
-      as: "reservaQuarto",
+      foreignKey: 'quartoId',
+      as: 'reservaQuarto',
     }); 
   };
 

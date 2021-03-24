@@ -27,13 +27,13 @@ export default function (app: Application): typeof Model {
 
   (categoriaQuarto as any).associate = function (models: any): void {
     categoriaQuarto.hasMany(models.quarto,
-    {
-      foreignKey: 'categoriaQuartoId',
-      as: 'quarto'
-    });
+      {
+        foreignKey: 'categoriaQuartoId',
+        as: 'quarto'
+      });
     categoriaQuarto.hasMany(models.categoria_item_quarto, {
-      foreignKey: "categoriaQuartoId",
-      as: "categoriaItemQuarto",
+      foreignKey: 'categoriaQuartoId',
+      as: 'categoriaItemQuarto',
     });
   };
 

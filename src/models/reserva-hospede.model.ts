@@ -11,12 +11,12 @@ export default function (app: Application): typeof Model {
     ...BaseModel,
     reservaId: {
       type: DataTypes.INTEGER,
-      field: "reserva_id",
+      field: 'reserva_id',
       allowNull: false,
     },
     hospedeId: {
       type: DataTypes.INTEGER,
-      field: "hospede_id",
+      field: 'hospede_id',
       allowNull: false,
     },
   }, {
@@ -30,12 +30,12 @@ export default function (app: Application): typeof Model {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (reservaHospede as any).associate = function (models: any): void {
     reservaHospede.belongsTo(models.hospede, {
-      foreignKey: "hospedeId",
-      as: "hospede",
+      foreignKey: 'hospedeId',
+      as: 'hospede',
     });
     reservaHospede.belongsTo(models.reserva, {
-      foreignKey: "reservaId",
-      as: "reserva",
+      foreignKey: 'reservaId',
+      as: 'reserva',
     });
   };
 

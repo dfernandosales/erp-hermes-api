@@ -9,11 +9,11 @@ import { EstadoCivil, Genero } from './enum/usuario.enum';
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   const funcionario = sequelizeClient.define('funcionario', {
-  ...BaseModel,
+    ...BaseModel,
     nomeCompleto: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: "nome_completo"
+      field: 'nome_completo'
     },
     email: {
       type: DataTypes.STRING,
@@ -27,7 +27,7 @@ export default function (app: Application): typeof Model {
     },
     dataNascimento: {
       type: DataTypes.DATE,
-      field: "data_nascimento",
+      field: 'data_nascimento',
       allowNull: false
     },
     sexo: {
@@ -41,7 +41,7 @@ export default function (app: Application): typeof Model {
     estadoCivil: {
       type: DataTypes.ENUM,
       allowNull: false,
-      field: "estado_civil",
+      field: 'estado_civil',
       values: Object.keys(EstadoCivil),
       validate: {         
         isIn: [Object.keys(EstadoCivil)],
@@ -62,7 +62,7 @@ export default function (app: Application): typeof Model {
     numEndereco: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: "num_endereco" 
+      field: 'num_endereco' 
     },
     complemento: {
       type: DataTypes.STRING,
@@ -86,7 +86,7 @@ export default function (app: Application): typeof Model {
     turnoTrabalho: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: "turno_trabalho"
+      field: 'turno_trabalho'
     },
   }, {
     hooks: {

@@ -1,12 +1,12 @@
 import * as authentication from '@feathersjs/authentication';
 import { HookContext } from '@feathersjs/feathers';
-import moment from "moment";
+import moment from 'moment';
 import { StatusReserva } from '../../models/enum/reservaEnum';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
 
-const includeRelacoesFind = (context: HookContext) => {
+const includeRelacoesFind = (context: HookContext): HookContext => {
   context.params.sequelize = {
     include: [{
       association: 'reservaQuarto',
@@ -26,38 +26,37 @@ const includeRelacoesFind = (context: HookContext) => {
   return context;
 };
 
-const confirmCheckoutCalculateValor = async (context: HookContext) => {
+const confirmCheckoutCalculateValor = async (context: HookContext): Promise<HookContext> => {
   if (context.data.checkout) {
     try {
-      const reservaService = context.app.service("reserva");
-      const quartoService = context.app.service("quarto");
-      const reservaQuartoService = context.app.service("reserva-quarto");
-      const categoriaQuartoService = context.app.service("categoria-quarto");
-      const reserva = await reservaService.get(context.id)
+      const reservaService = context.app.service('reserva');
+      const quartoService = context.app.service('quarto');
+      const reservaQuartoService = context.app.service('reserva-quarto');
+      const categoriaQuartoService = context.app.service('categoria-quarto');
+      const reserva = await reservaService.get(context.id);
       let diffDays = moment(reserva.dataFimReserva).diff(
         moment(reserva.dataInicioReserva),
-        "days"
+        'days'
       );
       diffDays === 0 ? diffDays = 1 : diffDays;
       const formated = JSON.parse(JSON.stringify(reserva));
       const valor = await formated.reservaQuarto.reduce(async function (accumulator: any, currentValue: any) {
         const categoria = await categoriaQuartoService.get(currentValue.quarto.categoriaQuartoId);
         return accumulator += categoria.valor * diffDays;
-      }, 0)
+      }, 0);
       if (formated.reservaQuarto.length) {
         for (const reservaQuarto of formated.reservaQuarto) {
-          const relation = await reservaQuartoService.get(reservaQuarto.id)
+          const relation = await reservaQuartoService.get(reservaQuarto.id);
           await quartoService._patch(relation.quartoId, { vacancia: true });
         }
       }
       await reservaService._patch(context.id, { valorReserva: valor, status: StatusReserva.FECHADA });
     } catch (error) {
-      console.log(error)
+      return error;
     }
-  }else{
-    return context;
   }
-}
+  return context;
+};
 
 export default {
   before: {
