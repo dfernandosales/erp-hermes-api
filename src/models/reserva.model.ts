@@ -3,8 +3,15 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import { Application } from '../declarations';
 import { HookReturn } from 'sequelize/types/lib/hooks';
-import { BaseModel } from './common';
+import { BaseModel, BaseModelType } from './common';
 import { StatusReserva } from './enum/reservaEnum';
+
+export interface ReservaModel extends BaseModelType {
+  dataInicioReserva: Date,
+  dataFimReserva: Date,
+  valorReserva:number,
+  status:string
+}
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
