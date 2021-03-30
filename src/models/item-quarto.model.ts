@@ -9,7 +9,7 @@ export default function (app: Application): typeof Model {
     ...BaseModel,
     nome: {
       type: DataTypes.STRING,
-      field:"nome_item",
+      field:'nome_item',
       allowNull: false
     },
   }, {
@@ -22,8 +22,8 @@ export default function (app: Application): typeof Model {
 
   (itemQuarto as any).associate = function (models: any): void {
     itemQuarto.hasMany(models.categoria_item_quarto, {
-      foreignKey: "itemQuartoId",
-      as: "categoriaItemQuarto",
+      foreignKey: 'itemQuartoId',
+      as: 'categoriaItemQuarto',
     });
   };
 

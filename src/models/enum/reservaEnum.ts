@@ -1,4 +1,4 @@
 export enum StatusReserva {
-    ABERTA = "ABERTA",
-    FECHADA = "FECHADA",
+    ABERTA = 'ABERTA',
+    FECHADA = 'FECHADA',
   }

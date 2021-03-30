@@ -8,11 +8,11 @@ import { BaseModel } from './common';
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   const estados = sequelizeClient.define('estados', {
-  ...BaseModel,
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  }
+    ...BaseModel,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     hooks: {
       beforeCount(options: any): HookReturn {

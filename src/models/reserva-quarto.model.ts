@@ -3,7 +3,12 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import { Application } from '../declarations';
 import { HookReturn } from 'sequelize/types/lib/hooks';
-import { BaseModel } from './common';
+import { BaseModel, BaseModelType } from './common';
+
+export interface ReservaQuartoModel extends BaseModelType {
+  reservaId: number,
+  quartoId: number,
+}
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
@@ -11,12 +16,12 @@ export default function (app: Application): typeof Model {
     ...BaseModel,
     reservaId: {
       type: DataTypes.INTEGER,
-      field: "reserva_id",
+      field: 'reserva_id',
       allowNull: false,
     },
     quartoId: {
       type: DataTypes.INTEGER,
-      field: "quarto_id",
+      field: 'quarto_id',
       allowNull: false,
     }
   }, {
@@ -29,12 +34,12 @@ export default function (app: Application): typeof Model {
 
   (reservaQuarto as any).associate = function (models: any): void {
     reservaQuarto.belongsTo(models.quarto, {
-      foreignKey: "quartoId",
-      as: "quarto",
+      foreignKey: 'quartoId',
+      as: 'quarto',
     });
     reservaQuarto.belongsTo(models.reserva, {
-      foreignKey: "reservaId",
-      as: "reserva",
+      foreignKey: 'reservaId',
+      as: 'reserva',
     });
   };
 

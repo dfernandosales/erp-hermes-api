@@ -3,8 +3,15 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import { Application } from '../declarations';
 import { HookReturn } from 'sequelize/types/lib/hooks';
-import { BaseModel } from './common';
+import { BaseModel, BaseModelType } from './common';
 import { StatusReserva } from './enum/reservaEnum';
+
+export interface ReservaModel extends BaseModelType {
+  dataInicioReserva: Date,
+  dataFimReserva: Date,
+  valorReserva:number,
+  status:string
+}
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
@@ -12,16 +19,16 @@ export default function (app: Application): typeof Model {
     ...BaseModel,
     dataInicioReserva: {
       type: DataTypes.DATE,
-      field: "data_inicio_reserva",
+      field: 'data_inicio_reserva',
       allowNull: false
     },
     dataFimReserva: {
       type: DataTypes.DATE,
-      field: "data_fim_reserva",
+      field: 'data_fim_reserva',
     },
     valorReserva:{
       type: DataTypes.BIGINT,
-      field: "valor_reserva",
+      field: 'valor_reserva',
     },
     status:{
       type: DataTypes.STRING,
@@ -37,12 +44,12 @@ export default function (app: Application): typeof Model {
 
   (reserva as any).associate = function (models: any): void {
     reserva.hasMany(models.reserva_quarto, {
-      foreignKey: "reservaId",
-      as: "reservaQuarto",
+      foreignKey: 'reservaId',
+      as: 'reservaQuarto',
     }); 
     reserva.hasMany(models.reserva_hospede, {
-      foreignKey: "reservaId",
-      as: "reservaHospede",
+      foreignKey: 'reservaId',
+      as: 'reservaHospede',
     }); 
   };
 

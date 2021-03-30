@@ -18,7 +18,7 @@ const verificaUnico = () => async (context: HookContext) => {
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("Já existem um hospede com esse cpf na base de dados.");
+      throw new BadRequest('Já existem um hospede com esse cpf na base de dados.');
     }
   }
   return context;

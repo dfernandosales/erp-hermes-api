@@ -22,8 +22,8 @@ export default function (app: Application): void {
   app.configure(quarto);
   app.configure(itemQuarto);
   app.configure(categoriaItemQuarto);
-  app.configure(reserva)
-  app.configure(reservaQuarto)
-  app.configure(reservaHospede)
+  app.configure(reserva);
+  app.configure(reservaQuarto);
+  app.configure(reservaHospede);
   app.configure(ocupacaoChart);
 }

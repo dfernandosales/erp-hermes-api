@@ -1,6 +1,5 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import moment from "moment-timezone";
 import { CategoriaQuarto } from '../categoria-quarto/categoria-quarto.class';
 import { Reserva } from '../reserva/reserva.class';
 import { NotImplemented } from '@feathersjs/errors';
@@ -15,11 +14,11 @@ export class OcupacaoChart implements ServiceMethods<Data> {
   options: ServiceOptions;
 
   get categoriaQuartoService(): CategoriaQuarto {
-    return this.app.service("categoria-quarto");
+    return this.app.service('categoria-quarto');
   }
 
   get quartoService(): Reserva {
-    return this.app.service("quarto");
+    return this.app.service('quarto');
   }
 
   constructor(options: ServiceOptions = {}, app: Application) {
@@ -36,7 +35,7 @@ export class OcupacaoChart implements ServiceMethods<Data> {
     } else {
       const categorias: any = await this.categoriaQuartoService.find({ paginate: false });
 
-      let dashboard = [];
+      const dashboard = [];
       for (const item of categorias) {
         const vazios = (await this.quartoService.find({ query: { categoriaQuartoId: item.id, vacancia: true } })) as Paginated<any>;
         const ocupados = (await this.quartoService.find({ query: { categoriaQuartoId: item.id, vacancia: false } })) as Paginated<any>;

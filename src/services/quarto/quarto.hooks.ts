@@ -5,7 +5,7 @@ import { HookContext } from '@feathersjs/feathers';
 
 const { authenticate } = authentication.hooks;
 
-const includeRelacoesFind = (context: HookContext) => {
+const includeRelacoesFind = (context: HookContext):HookContext => {
   context.params.sequelize = {
     include: [{
       association: 'categoriaQuarto'
@@ -15,7 +15,7 @@ const includeRelacoesFind = (context: HookContext) => {
   return context;
 };
 
-const verificaUnico = async (context: HookContext) => {
+const verificaUnico = async (context: HookContext):Promise<HookContext> => {
   const { numero } = context.data;
   if (numero) {
     const query: any = {
@@ -26,28 +26,11 @@ const verificaUnico = async (context: HookContext) => {
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("Ja existe quarto com esse numero.");
+      throw new BadRequest('Ja existe quarto com esse numero.');
     }
   }
   return context;
 };
-
-
-const generateQuartoNumber = async (context: HookContext) => {
-  const lastQuartoNumber = await context.service.find({
-    query: {
-      $limit: 1, $sort: {
-        createdAt: -1
-      }
-    }
-  })
-  if (lastQuartoNumber.total > 0) {
-    context.data.numero = +lastQuartoNumber.data[0].numero + 1;
-  } else {
-    context.data.numero = 1;
-  }
-  return context;
-}
 
 export default {
   before: {

@@ -27,10 +27,10 @@ export default function (app: Application): typeof Model {
       type: DataTypes.STRING,
       allowNull: false,
       values: Object.keys(RoleUsuario),
-        defaultValue: RoleUsuario.FUNC,
-        validate: {
-          isIn: [Object.keys(RoleUsuario)],
-        },
+      defaultValue: RoleUsuario.FUNC,
+      validate: {
+        isIn: [Object.keys(RoleUsuario)],
+      },
     }
   }, {
     hooks: {

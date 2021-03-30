@@ -1,6 +1,6 @@
-import errors from "@feathersjs/errors";
-import {Id, Paginated, Params} from "@feathersjs/feathers";
-import {SequelizeServiceOptions, Service} from "feathers-sequelize";
+import errors from '@feathersjs/errors';
+import {Id, Paginated, Params} from '@feathersjs/feathers';
+import {SequelizeServiceOptions, Service} from 'feathers-sequelize';
 
 export class BaseService<T = any> extends Service {
   constructor(options: Partial<SequelizeServiceOptions>) {

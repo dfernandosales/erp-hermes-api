@@ -5,10 +5,10 @@ import { HookContext } from '@feathersjs/feathers';
 
 const { authenticate } = authentication.hooks;
 
-const includeRelacoesFind = (context: HookContext) => {
+const includeRelacoesFind = (context: HookContext): HookContext => {
   context.params.sequelize = {
     include: [{
-      association: 'quarto', include: [{association:"categoriaQuarto"}]
+      association: 'quarto', include: [{ association: 'categoriaQuarto' }]
     },
     {
       association: 'reserva',
@@ -19,7 +19,7 @@ const includeRelacoesFind = (context: HookContext) => {
   return context;
 };
 
-const verificaUnico = async (context: HookContext) => {
+const verificaUnico = async (context: HookContext): Promise<HookContext> => {
   const { quartoId, reservaId } = context.data;
   if (quartoId) {
     const query: any = {
@@ -31,28 +31,29 @@ const verificaUnico = async (context: HookContext) => {
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("O quarto selecionado ja foi adicionado na reserva.");
+      throw new BadRequest('O quarto selecionado ja foi adicionado na reserva.');
     }
   }
   return context;
 };
 
-const changeQuartoStatusToOcupado = async (context: HookContext) => {
-  const quartoService = context.app.service("quarto");
-  quartoService.patch(context.result.quartoId,{vacancia:false})
+const changeQuartoStatusToOcupado = async (context: HookContext): Promise<HookContext> => {
+  const quartoService = context.app.service('quarto');
+  await quartoService.patch(context.result.quartoId, { vacancia: false });
+  return context;
 };
 
-const changeQuartoStatusToVago = async (context: HookContext) => {
-  const quartoService = context.app.service("quarto");
+const changeQuartoStatusToVago = async (context: HookContext): Promise<HookContext> => {
+  const quartoService = context.app.service('quarto');
   const relation = await context.service._get(Number(context.id));
-  console.log(relation)
-  await quartoService.patch(relation.quartoId,{vacancia:true})
+  await quartoService.patch(relation.quartoId, { vacancia: true });
+  return context;
 };
 
 
 export default {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [authenticate('jwt')],
     find: [includeRelacoesFind],
     get: [includeRelacoesFind],
     create: [verificaUnico],

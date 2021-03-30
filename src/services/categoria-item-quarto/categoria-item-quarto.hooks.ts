@@ -6,11 +6,11 @@ import { HookContext } from '@feathersjs/feathers';
 const { authenticate } = authentication.hooks;
 
 
-const includeRelacoesFind = (context: HookContext) => {
+const includeRelacoesFind = (context: HookContext): HookContext => {
   context.params.sequelize = {
     include: [{
-      association: 'categoria',  
-    }, 
+      association: 'categoria',
+    },
     {
       association: 'item'
     }],
@@ -31,7 +31,7 @@ const verificaUnico = () => async (context: HookContext) => {
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest("Item já adicionado nessa categoria.");
+      throw new BadRequest('Item já adicionado nessa categoria.');
     }
   }
   return context;
@@ -39,7 +39,7 @@ const verificaUnico = () => async (context: HookContext) => {
 
 export default {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [authenticate('jwt')],
     find: [includeRelacoesFind],
     get: [includeRelacoesFind],
     create: [verificaUnico()],

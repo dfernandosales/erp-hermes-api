@@ -15,12 +15,12 @@ export default function (app: Application): typeof Model {
     },
     categoriaQuartoId: {
       type: DataTypes.INTEGER,
-      field: "categoria_quarto_id",
+      field: 'categoria_quarto_id',
       allowNull: false,
     },
     itemQuartoId: {
       type: DataTypes.INTEGER,
-      field: "item_quarto_id",
+      field: 'item_quarto_id',
       allowNull: false,
     },
   }, {
@@ -33,12 +33,12 @@ export default function (app: Application): typeof Model {
 
   (categoriaItemQuarto as any).associate = function (models: any): void {
     categoriaItemQuarto.belongsTo(models.item_quarto, {
-      foreignKey: "itemQuartoId",
-      as: "item",
+      foreignKey: 'itemQuartoId',
+      as: 'item',
     });
     categoriaItemQuarto.belongsTo(models.categoria_quarto, {
-      foreignKey: "categoriaQuartoId",
-      as: "categoria",
+      foreignKey: 'categoriaQuartoId',
+      as: 'categoria',
     });
   };
 

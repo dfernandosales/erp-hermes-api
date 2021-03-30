@@ -1,5 +1,6 @@
 import assert from 'assert';
 import app from '../src/app';
+import { RoleUsuario } from '../src/models/enum/usuario.enum';
 
 describe('authentication', () => {
   it('registered the authentication service', () => {
@@ -9,14 +10,15 @@ describe('authentication', () => {
   describe('local strategy', () => {
     const userInfo = {
       email: 'someone@example.com',
-      password: 'supersecret'
+      password: 'supersecret',
+      name: 'test',
+      role: RoleUsuario.ADMIN
     };
 
     before(async () => {
       try {
         await app.service('users').create(userInfo);
       } catch (error) {
-        // Do nothing, it just means the user already exists and can be tested
       }
     });
 
@@ -25,7 +27,6 @@ describe('authentication', () => {
         strategy: 'local',
         ...userInfo
       }, {});
-      
       assert.ok(accessToken, 'Created access token for user');
       assert.ok(user, 'Includes user in authentication data');
     });

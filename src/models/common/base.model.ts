@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
 
 // Desativar ordenação das chaves do objeto pra organizar
 // os dados do modelo de maneira lógica.
@@ -8,19 +8,19 @@ export const BaseModel = {
     allowNull: false,
     defaultValue: DataTypes.NOW,
     type: DataTypes.DATE,
-    field: "created_at",
+    field: 'created_at',
   },
   updatedAt: {
     allowNull: false,
     defaultValue: DataTypes.NOW,
     type: DataTypes.DATE,
-    field: "updated_at",
+    field: 'updated_at',
   },
   deletedAt: {
     allowNull: true,
     defaultValue: null,
     type: DataTypes.DATE,
-    field: "deleted_at",
+    field: 'deleted_at',
   },
 };
 
