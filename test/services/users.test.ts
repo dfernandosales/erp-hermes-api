@@ -20,12 +20,10 @@ describe('\'users\' service', () => {
       role: RoleUsuario.ADMIN
     };
 
-    before(async () => {
-      try {
-        await app.service('users').create(user);
-      } catch (error) {
-      }
-    });
+    try {
+      await app.service('users').create(user);
+    } catch (error) {
+    }
     it('checks password is encrypted', async () => {
       const user = (await app.service('users')
         .find({

@@ -58,12 +58,25 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
   return context;
 };
 
+const validaDateAntes = async (context: HookContext): Promise<HookContext> => {
+  if (context.data.dataFimReserva) {
+    let diffDays = moment(context.data.dataFimReserva).diff(
+      moment(context.data.dataInicioReserva),
+      'days'
+    );
+    if (diffDays < 0) {
+      throw Error("A Data fim da reserva deve ser igual ou maior que a data inicio da reserva.");
+    }
+  }
+  return context;
+}
+
 export default {
   before: {
     all: [authenticate('jwt')],
     find: [includeRelacoesFind],
     get: [includeRelacoesFind],
-    create: [],
+    create: [validaDateAntes],
     update: [],
     patch: [],
     remove: []
