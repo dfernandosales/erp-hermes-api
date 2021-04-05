@@ -1,7 +1,11 @@
 import * as authentication from '@feathersjs/authentication';
-import { HookContext } from '@feathersjs/feathers';
+import { GeneralError } from '@feathersjs/errors';
+import { HookContext, Paginated } from '@feathersjs/feathers';
 import moment from 'moment';
+import { ReservaHospedeClass, ReservaQuartoClass } from '../../models/builder';
 import { StatusReserva } from '../../models/enum/reservaEnum';
+import { ReservaHospedeModel } from '../../models/reserva-hospede.model';
+import { ReservaQuartoModel } from '../../models/reserva-quarto.model';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -32,8 +36,20 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
       const reservaService = context.app.service('reserva');
       const quartoService = context.app.service('quarto');
       const reservaQuartoService = context.app.service('reserva-quarto');
+      const reservaHospedeService = context.app.service('reserva-hospede');
       const categoriaQuartoService = context.app.service('categoria-quarto');
-      const reserva = await reservaService.get(context.id);
+      let reserva = await reservaService.get(context.id);
+      if (!reserva.dataFimReserva) {
+        reserva = await reservaService._patch(context.id, { dataFimReserva: moment(reserva.dataInicioReserva).add(1, "day") });
+      }
+      const hasQuarto: Paginated<ReservaQuartoModel> = await reservaQuartoService.find({ query: { reservaId: reserva.id } })
+      const hasHospede: Paginated<ReservaHospedeModel> = await reservaHospedeService.find({ query: { reservaId: reserva.id } })
+      if (hasQuarto.total === 0) {
+        throw Error('Nao eh permitido realizar o checkout de uma reserva sem nenhum quarto');
+      }
+      if (hasHospede.total === 0) {
+        throw Error('Nao eh permitido realizar o checkout de uma reserva sem nenhum hospede');
+      }
       let diffDays = moment(reserva.dataFimReserva).diff(
         moment(reserva.dataInicioReserva),
         'days'
@@ -52,7 +68,7 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
       }
       await reservaService._patch(context.id, { valorReserva: valor, status: StatusReserva.FECHADA });
     } catch (error) {
-      return error;
+      throw new GeneralError("Erro ao tentar realizar checkout da reserva. Nao existem hospede ou um quarto cadastrado na mesma.", error);
     }
   }
   return context;
