@@ -24,11 +24,20 @@ const verificaUnico = () => async (context: HookContext) => {
   return context;
 };
 
+const includeRelacoesFind = (context: HookContext): HookContext => {
+  context.params.sequelize = {
+    include: [{
+      association: 'cargo',
+    },],
+    raw: false,
+  };
+  return context;
+};
 
 export default {
   before: {
     all: [ authenticate('jwt') ],
-    find: [],
+    find: [includeRelacoesFind],
     get: [],
     create: [verificaUnico()],
     update: [verificaUnico()],
