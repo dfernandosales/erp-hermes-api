@@ -48,6 +48,7 @@ export class ReservaBuilder {
 
 
 export class ReservaClass {
+    private id!: Number;
     private dataInicioReserva: Date;
     private dataFimReserva: Date;
     private valorReserva: number;
@@ -62,6 +63,9 @@ export class ReservaClass {
 
     get DataInicioReserva() {
       return this.dataInicioReserva;
+    }
+    get Id() {
+      return this.id;
     }
     get Status() {
       return this.status;
