@@ -39,9 +39,6 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
       const reservaHospedeService = context.app.service('reserva-hospede');
       const categoriaQuartoService = context.app.service('categoria-quarto');
       let reserva = await reservaService.get(context.id);
-      if (!reserva.dataFimReserva) {
-        reserva = await reservaService._patch(context.id, { dataFimReserva: moment(reserva.dataInicioReserva).add(1, "day") });
-      }
       const hasQuarto: Paginated<ReservaQuartoModel> = await reservaQuartoService.find({ query: { reservaId: reserva.id } })
       const hasHospede: Paginated<ReservaHospedeModel> = await reservaHospedeService.find({ query: { reservaId: reserva.id } })
       if (hasQuarto.total === 0) {
@@ -49,6 +46,9 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
       }
       if (hasHospede.total === 0) {
         throw Error('Nao eh permitido realizar o checkout de uma reserva sem nenhum hospede');
+      }
+      if (!reserva.dataFimReserva) {
+        reserva = await reservaService._patch(context.id, { dataFimReserva: moment(reserva.dataInicioReserva).add(1, "day") });
       }
       let diffDays = moment(reserva.dataFimReserva).diff(
         moment(reserva.dataInicioReserva),
