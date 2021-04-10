@@ -55,7 +55,7 @@ describe("teste de criacao de reserva caminho feliz ", () => {
     const reserva = (await app.service('reserva').find()) as Paginated<ReservaModel>;
     await app.service('reserva').patch(reserva.data[0].id, { checkout: true })
     const reservaNew = (await app.service('reserva').find()) as Paginated<ReservaModel>;
-    assert(reservaNew.data[0].valorReserva == 300 && reservaNew.data[0].status == 'FECHADA')
+    assert(reservaNew.data[0].valorReserva == 300 && reservaNew.data[0].status == 'FINALIZADA')
   })
 
   it("verifica se possui quarto vinculado a essa reserva", async () => {

@@ -11,22 +11,24 @@ import { ReservaQuartoModel } from '../../models/reserva-quarto.model';
 const { authenticate } = authentication.hooks;
 
 const includeRelacoesFind = (context: HookContext): HookContext => {
-  context.params.sequelize = {
-    include: [{
-      association: 'reservaQuarto',
+  if (context.params.query?.$limit != 10000) {
+    context.params.sequelize = {
       include: [{
-        association: 'quarto'
-      }]
-    },
-    {
-      association: 'reservaHospede',
-      include: [{
-        association: 'hospede'
-      }]
-    }
-    ],
-    raw: false,
-  };
+        association: 'reservaQuarto',
+        include: [{
+          association: 'quarto'
+        }]
+      },
+      {
+        association: 'reservaHospede',
+        include: [{
+          association: 'hospede'
+        }]
+      }
+      ],
+      raw: false,
+    };
+  }
   return context;
 };
 
@@ -60,13 +62,11 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
         const categoria = await categoriaQuartoService.get(currentValue.quarto.categoriaQuartoId);
         return accumulator += categoria.valor * diffDays;
       }, 0);
-      if (formated.reservaQuarto.length) {
-        for (const reservaQuarto of formated.reservaQuarto) {
-          const relation = await reservaQuartoService.get(reservaQuarto.id);
-          await quartoService._patch(relation.quartoId, { vacancia: true });
-        }
+      for (const reservaQuarto of formated.reservaQuarto) {
+        const relation = await reservaQuartoService.get(reservaQuarto.id);
+        await quartoService._patch(relation.quartoId, { vacancia: true });
       }
-      await reservaService._patch(context.id, { valorReserva: valor, status: StatusReserva.FECHADA });
+      await reservaService._patch(context.id, { valorReserva: valor, status: StatusReserva.FINALIZADA });
     } catch (error) {
       throw new GeneralError("Erro ao tentar realizar checkout da reserva. Nao existem hospede ou um quarto cadastrado na mesma.", error);
     }
@@ -87,10 +87,17 @@ const validaDateAntes = async (context: HookContext): Promise<HookContext> => {
   return context;
 }
 
+const verificaDowload = (context: HookContext) => {
+  if (context.params.query?.$limit == 10000) {
+    context.params.query = { ...context.params.query, $select: ["createdAt", "valorReserva"] }
+  }
+  return context;
+}
+
 export default {
   before: {
     all: [authenticate('jwt')],
-    find: [includeRelacoesFind],
+    find: [includeRelacoesFind, verificaDowload],
     get: [includeRelacoesFind],
     create: [validaDateAntes],
     update: [],
