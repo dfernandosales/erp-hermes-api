@@ -2,7 +2,6 @@ import * as authentication from '@feathersjs/authentication';
 import { GeneralError } from '@feathersjs/errors';
 import { HookContext, Paginated } from '@feathersjs/feathers';
 import moment from 'moment';
-import { ReservaHospedeClass, ReservaQuartoClass } from '../../models/builder';
 import { StatusReserva } from '../../models/enum/reservaEnum';
 import { ReservaHospedeModel } from '../../models/reserva-hospede.model';
 import { ReservaQuartoModel } from '../../models/reserva-quarto.model';
@@ -11,24 +10,23 @@ import { ReservaQuartoModel } from '../../models/reserva-quarto.model';
 const { authenticate } = authentication.hooks;
 
 const includeRelacoesFind = (context: HookContext): HookContext => {
-  if (context.params.query?.$limit != 10000) {
-    context.params.sequelize = {
+  context.params.sequelize = {
+    include: [{
+      association: 'reservaQuarto',
       include: [{
-        association: 'reservaQuarto',
-        include: [{
-          association: 'quarto'
-        }]
-      },
-      {
-        association: 'reservaHospede',
-        include: [{
-          association: 'hospede'
-        }]
-      }
-      ],
-      raw: false,
-    };
-  }
+        association: 'quarto'
+      }]
+    },
+    {
+      association: 'reservaHospede',
+      include: [{
+        association: 'hospede'
+      }]
+    }
+    ],
+    raw: false,
+  };
+
   return context;
 };
 
@@ -36,6 +34,7 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
   if (context.data.checkout) {
     try {
       const reservaService = context.app.service('reserva');
+      const recebimentoService = context.app.service('folha-recebimento');
       const quartoService = context.app.service('quarto');
       const reservaQuartoService = context.app.service('reserva-quarto');
       const reservaHospedeService = context.app.service('reserva-hospede');
@@ -66,6 +65,7 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
         const relation = await reservaQuartoService.get(reservaQuarto.id);
         await quartoService._patch(relation.quartoId, { vacancia: true });
       }
+      await recebimentoService.create({ descricao: `Recimento da reserva #${context.id}`, dataRecebimento: new Date(), valor: valor });
       await reservaService._patch(context.id, { valorReserva: valor, status: StatusReserva.FINALIZADA });
     } catch (error) {
       throw new GeneralError("Erro ao tentar realizar checkout da reserva. Nao existem hospede ou um quarto cadastrado na mesma.", error);
@@ -87,17 +87,11 @@ const validaDateAntes = async (context: HookContext): Promise<HookContext> => {
   return context;
 }
 
-const verificaDowload = (context: HookContext) => {
-  if (context.params.query?.$limit == 10000) {
-    context.params.query = { ...context.params.query, $select: ["createdAt", "valorReserva"] }
-  }
-  return context;
-}
 
 export default {
   before: {
     all: [authenticate('jwt')],
-    find: [includeRelacoesFind, verificaDowload],
+    find: [includeRelacoesFind],
     get: [includeRelacoesFind],
     create: [validaDateAntes],
     update: [],
