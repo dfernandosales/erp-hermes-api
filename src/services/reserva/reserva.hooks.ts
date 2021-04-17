@@ -50,7 +50,7 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
         throw Error('Nao eh permitido realizar o checkout de uma reserva sem nenhum hospede');
       }
       if (!reserva.dataFimReserva) {
-        reserva = await reservaService._patch(context.id, { dataFimReserva: moment(reserva.dataInicioReserva).add(1, "day") });
+        reserva = await reservaService._patch(context.id, { dataFimReserva: new Date() });
       }
       let diffDays = moment(reserva.dataFimReserva).diff(
         moment(reserva.dataInicioReserva),

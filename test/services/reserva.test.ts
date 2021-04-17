@@ -55,7 +55,7 @@ describe("teste de criacao de reserva caminho feliz ", () => {
     const reserva = (await app.service('reserva').find()) as Paginated<ReservaModel>;
     await app.service('reserva').patch(reserva.data[0].id, { checkout: true })
     const reservaNew = (await app.service('reserva').find()) as Paginated<ReservaModel>;
-    assert(reservaNew.data[0].valorReserva == 300 && reservaNew.data[0].status == 'FINALIZADA')
+    assert(reservaNew.data[0].valorReserva == 100 && reservaNew.data[0].status == 'FINALIZADA')
   })
 
   it("verifica se possui quarto vinculado a essa reserva", async () => {
@@ -78,7 +78,15 @@ describe("teste de criacao de reserva caminho feliz ", () => {
     await assert.rejects((async () => { await app.service('reserva').create(obj) })());
   })
 
-  it("erro ao tentar dar checkout em reserva sem hospede e sem quarto", async () => {
+  it("erro ao tentar dar checkout em reserva sem quarto", async () => {
+    const obj: ReservaClass = new ReservaBuilder()
+      .setDataInicioReserva(moment().tz("America/Sao_Paulo").startOf("day").toDate())
+      .build();
+    const created: any = await app.service('reserva').create(obj);
+    await assert.rejects((async () => { await app.service('reserva').patch(created.id, { checkout: true }) })());
+  })
+
+  it("erro ao tentar dar checkout em reserva sem hospede ", async () => {
     const obj: ReservaClass = new ReservaBuilder()
       .setDataInicioReserva(moment().tz("America/Sao_Paulo").startOf("day").toDate())
       .build();
