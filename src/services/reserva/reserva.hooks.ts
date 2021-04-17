@@ -2,7 +2,6 @@ import * as authentication from '@feathersjs/authentication';
 import { GeneralError } from '@feathersjs/errors';
 import { HookContext, Paginated } from '@feathersjs/feathers';
 import moment from 'moment';
-import { ReservaHospedeClass, ReservaQuartoClass } from '../../models/builder';
 import { StatusReserva } from '../../models/enum/reservaEnum';
 import { ReservaHospedeModel } from '../../models/reserva-hospede.model';
 import { ReservaQuartoModel } from '../../models/reserva-quarto.model';
@@ -27,6 +26,7 @@ const includeRelacoesFind = (context: HookContext): HookContext => {
     ],
     raw: false,
   };
+
   return context;
 };
 
@@ -34,14 +34,12 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
   if (context.data.checkout) {
     try {
       const reservaService = context.app.service('reserva');
+      const recebimentoService = context.app.service('folha-recebimento');
       const quartoService = context.app.service('quarto');
       const reservaQuartoService = context.app.service('reserva-quarto');
       const reservaHospedeService = context.app.service('reserva-hospede');
       const categoriaQuartoService = context.app.service('categoria-quarto');
       let reserva = await reservaService.get(context.id);
-      if (!reserva.dataFimReserva) {
-        reserva = await reservaService._patch(context.id, { dataFimReserva: moment(reserva.dataInicioReserva).add(1, "day") });
-      }
       const hasQuarto: Paginated<ReservaQuartoModel> = await reservaQuartoService.find({ query: { reservaId: reserva.id } })
       const hasHospede: Paginated<ReservaHospedeModel> = await reservaHospedeService.find({ query: { reservaId: reserva.id } })
       if (hasQuarto.total === 0) {
@@ -49,6 +47,9 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
       }
       if (hasHospede.total === 0) {
         throw Error('Nao eh permitido realizar o checkout de uma reserva sem nenhum hospede');
+      }
+      if (!reserva.dataFimReserva) {
+        reserva = await reservaService._patch(context.id, { dataFimReserva: new Date() });
       }
       let diffDays = moment(reserva.dataFimReserva).diff(
         moment(reserva.dataInicioReserva),
@@ -60,13 +61,12 @@ const confirmCheckoutCalculateValor = async (context: HookContext): Promise<Hook
         const categoria = await categoriaQuartoService.get(currentValue.quarto.categoriaQuartoId);
         return accumulator += categoria.valor * diffDays;
       }, 0);
-      if (formated.reservaQuarto.length) {
-        for (const reservaQuarto of formated.reservaQuarto) {
-          const relation = await reservaQuartoService.get(reservaQuarto.id);
-          await quartoService._patch(relation.quartoId, { vacancia: true });
-        }
+      for (const reservaQuarto of formated.reservaQuarto) {
+        const relation = await reservaQuartoService.get(reservaQuarto.id);
+        await quartoService._patch(relation.quartoId, { vacancia: true });
       }
-      await reservaService._patch(context.id, { valorReserva: valor, status: StatusReserva.FECHADA });
+      await recebimentoService.create({ descricao: `Recimento da reserva #${context.id}`, dataRecebimento: new Date(), valor: valor });
+      await reservaService._patch(context.id, { valorReserva: valor, status: StatusReserva.FINALIZADA });
     } catch (error) {
       throw new GeneralError("Erro ao tentar realizar checkout da reserva. Nao existem hospede ou um quarto cadastrado na mesma.", error);
     }
@@ -86,6 +86,7 @@ const validaDateAntes = async (context: HookContext): Promise<HookContext> => {
   }
   return context;
 }
+
 
 export default {
   before: {

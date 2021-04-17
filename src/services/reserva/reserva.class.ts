@@ -15,7 +15,7 @@ export class Reserva extends BaseService {
     if (data.DataFimReserva) {
       obj = new ReservaBuilder()
         .setDataInicioReserva(moment(data.DataInicioReserva).tz("America/Sao_Paulo").startOf("day").toDate())
-        .setDataInicioReserva(moment(data.DataFimReserva).tz("America/Sao_Paulo").startOf("day").toDate())
+        .setDataFimReserva(moment(data.DataFimReserva).tz("America/Sao_Paulo").startOf("day").toDate())
         .build();
     } else {
       obj = new ReservaBuilder()

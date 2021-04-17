@@ -11,12 +11,12 @@ export class ReservaBuilder {
       return this.dataInicioReserva;
     }
 
-    setDataInicioReserva(value: Date) {
+    setDataInicioReserva(value: Date): ReservaBuilder {
       this.dataInicioReserva = value;
       return this;
     }
 
-    setStatus(value: string) {
+    setStatus(value: string): ReservaBuilder {
       this.status = value;
       return this;
     }

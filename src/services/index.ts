@@ -28,5 +28,4 @@ export default function (app: Application): void {
   app.configure(reservaHospede);
   app.configure(ocupacaoChart);
   app.configure(folhaRecebimento);
-  app.configure(folhaRecebimento);
 }
