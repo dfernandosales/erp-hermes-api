@@ -1,0 +1,1 @@
+DROP TABLE public.folha_recebimento CASCADE;
