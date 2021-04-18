@@ -28,17 +28,17 @@ describe("teste de criacao de reserva caminho feliz ", () => {
       const hospede = await app.service("hospede").create({
         nomeCompleto: 'teste',
         email: 'teste@gmail.com',
-        cpf: '422.369.118-07',
+        cpf: '411.339.112-03',
         dataNascimento: '1996-04-11T03:00:00.000Z',
         sexo: 'MASCULINO',
         estadoCivil: 'SOLTEIRO',
         profissao: 'Desenvolvedor de Software',
-        telefone: '(44)98801-7610',
-        rua: 'Vicente Martelosso',
-        bairro: 'Santa Rosa',
+        telefone: '(44)92341-7610',
+        rua: 'Joao Martelosso',
+        bairro: 'Maria Rosa',
         numEndereco: '416',
-        cep: '87160-000',
-        cidade: 'Mandaguacu',
+        cep: '82560-000',
+        cidade: 'Maringa',
         estado: 14
       });
       const created: any = await app.service('reserva').create(obj);

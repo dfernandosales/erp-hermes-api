@@ -1,8 +1,8 @@
 export class ReservaBuilder {
-    private dataInicioReserva!: Date;
-    private dataFimReserva!: Date;
-    private valorReserva!: number;
-    private status!: string;
+    public dataInicioReserva!: Date;
+    public dataFimReserva!: Date;
+    public valorReserva!: number;
+    public status!: string;
 
     constructor() {
     }
@@ -48,32 +48,16 @@ export class ReservaBuilder {
 
 
 export class ReservaClass {
-    private id!: Number;
-    private dataInicioReserva: Date;
-    private dataFimReserva: Date;
-    private valorReserva: number;
-    private status: string;
+    public id!: Number;
+    public dataInicioReserva: Date;
+    public dataFimReserva: Date;
+    public valorReserva: number;
+    public status: string;
 
     constructor(builder: ReservaBuilder) {
-      this.dataInicioReserva = builder.DataInicioReserva;
+      this.dataInicioReserva = builder.dataInicioReserva;
       this.dataFimReserva = builder.DataFimReserva;
       this.valorReserva = builder.ValorReserva;
       this.status = builder.Status;
-    }
-
-    get DataInicioReserva() {
-      return this.dataInicioReserva;
-    }
-    get Id() {
-      return this.id;
-    }
-    get Status() {
-      return this.status;
-    }
-    get ValorReserva() {
-      return this.valorReserva;
-    }
-    get DataFimReserva() {
-      return this.dataFimReserva;
     }
 }

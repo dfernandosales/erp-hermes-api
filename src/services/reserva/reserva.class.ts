@@ -12,14 +12,14 @@ export class Reserva extends BaseService {
 
   async create(data: Partial<ReservaClass>, params?: Params): Promise<ReservaClass[] | Paginated<ReservaClass>> {
     let obj: ReservaClass;
-    if (data.DataFimReserva) {
+    if (data.dataFimReserva && data.dataInicioReserva) {
       obj = new ReservaBuilder()
-        .setDataInicioReserva(moment(data.DataInicioReserva).tz("America/Sao_Paulo").startOf("day").toDate())
-        .setDataFimReserva(moment(data.DataFimReserva).tz("America/Sao_Paulo").startOf("day").toDate())
+        .setDataInicioReserva(moment(data.dataInicioReserva).tz("America/Sao_Paulo").startOf("day").toDate())
+        .setDataFimReserva(moment(data.dataFimReserva).tz("America/Sao_Paulo").startOf("day").toDate())
         .build();
     } else {
       obj = new ReservaBuilder()
-        .setDataInicioReserva(moment(data.DataInicioReserva).tz("America/Sao_Paulo").startOf("day").toDate())
+        .setDataInicioReserva(moment(data.dataInicioReserva).tz("America/Sao_Paulo").startOf("day").toDate())
         .build();
     }
     return super.create(obj);
