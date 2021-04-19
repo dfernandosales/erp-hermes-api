@@ -10,7 +10,8 @@ export interface ReservaModel extends BaseModelType {
   dataInicioReserva: Date,
   dataFimReserva: Date,
   valorReserva:number,
-  status:string
+  status:string,
+  userId:number
 }
 
 export default function (app: Application): typeof Model {
@@ -33,7 +34,12 @@ export default function (app: Application): typeof Model {
     status:{
       type: DataTypes.STRING,
       defaultValue:StatusReserva.ABERTA
-    }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      field: "users_id",
+      allowNull: false,
+    },
   }, {
     hooks: {
       beforeCount(options: any): HookReturn {
@@ -51,6 +57,10 @@ export default function (app: Application): typeof Model {
       foreignKey: 'reservaId',
       as: 'reservaHospede',
     }); 
+    reserva.belongsTo(models.users, {
+      foreignKey: "userId",
+      as: "user",
+    });
   };
 
   return reserva;

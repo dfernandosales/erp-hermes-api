@@ -23,6 +23,10 @@ export default function (app: Application): typeof Model {
       type: DataTypes.STRING,
       allowNull: false
     },
+    funcionarioId: {
+      type: DataTypes.INTEGER,
+      field: "funcionario_id",
+    },
     role:{
       type: DataTypes.STRING,
       allowNull: false,
@@ -42,8 +46,14 @@ export default function (app: Application): typeof Model {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (users as any).associate = function (models: any): void {
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
+    users.belongsTo(models.funcionario, {
+      foreignKey: "funcionarioId",
+      as: "funcionario",
+    });
+    users.hasMany(models.reserva, {
+      foreignKey: 'userId',
+      as: 'user',
+    }); 
   };
 
   return users;
