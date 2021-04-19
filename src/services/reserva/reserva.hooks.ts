@@ -22,6 +22,9 @@ const includeRelacoesFind = (context: HookContext): HookContext => {
       include: [{
         association: 'hospede'
       }]
+    },
+    {
+      association: 'user'
     }
     ],
     raw: false,
@@ -86,7 +89,6 @@ const validaDateAntes = async (context: HookContext): Promise<HookContext> => {
   }
   return context;
 }
-
 
 export default {
   before: {
