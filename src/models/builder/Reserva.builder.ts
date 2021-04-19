@@ -3,8 +3,18 @@ export class ReservaBuilder {
     public dataFimReserva!: Date;
     public valorReserva!: number;
     public status!: string;
+    public userId!: number;
 
     constructor() {
+    }
+
+    get UserId() {
+      return this.userId;
+    }
+
+    setUserId(value: number): ReservaBuilder {
+      this.userId = value;
+      return this;
     }
 
     get DataInicioReserva() {
@@ -53,11 +63,13 @@ export class ReservaClass {
     public dataFimReserva: Date;
     public valorReserva: number;
     public status: string;
+    public userId: number;
 
     constructor(builder: ReservaBuilder) {
       this.dataInicioReserva = builder.dataInicioReserva;
       this.dataFimReserva = builder.DataFimReserva;
       this.valorReserva = builder.ValorReserva;
       this.status = builder.Status;
+      this.userId = builder.userId;
     }
 }

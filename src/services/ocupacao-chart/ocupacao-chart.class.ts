@@ -3,6 +3,7 @@ import { Application } from '../../declarations';
 import { CategoriaQuarto } from '../categoria-quarto/categoria-quarto.class';
 import { Reserva } from '../reserva/reserva.class';
 import { NotImplemented } from '@feathersjs/errors';
+import { Quarto } from '../quarto/quarto.class';
 
 interface Data { }
 
@@ -17,7 +18,7 @@ export class OcupacaoChart implements ServiceMethods<Data> {
     return this.app.service('categoria-quarto');
   }
 
-  get quartoService(): Reserva {
+  get quartoService(): Quarto {
     return this.app.service('quarto');
   }
 
