@@ -11,7 +11,6 @@ CREATE TABLE  public.funcionario (
   cpf TEXT UNIQUE NOT NULL,
   sexo TEXT NOT NULL,
   estado_civil TEXT NOT NULL,
-  cargo TEXT NOT NULL,
   telefone TEXT NOT NULL,
   turno_trabalho TEXT NOT NULL,
   rua TEXT NOT NULL,
@@ -20,5 +19,6 @@ CREATE TABLE  public.funcionario (
   complemento TEXT NULL,
   cep TEXT NOT NULL,
   cidade TEXT NOT NULL,
-  estado TEXT NOT NULL
+  estado TEXT NOT NULL,
+  cargo_id INT
 );

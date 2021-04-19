@@ -15,7 +15,7 @@ const includeRelacoesFind = (context: HookContext):HookContext => {
   return context;
 };
 
-const verificaUnico = async (context: HookContext):Promise<HookContext> => {
+const verificaExistencia = async (context: HookContext):Promise<HookContext> => {
   const { numero } = context.data;
   if (numero) {
     const query: any = {
@@ -26,7 +26,7 @@ const verificaUnico = async (context: HookContext):Promise<HookContext> => {
     }
     const currentUsers = await context.service.find({ query });
     if (currentUsers.total) {
-      throw new BadRequest('Ja existe quarto com esse numero.');
+      throw new BadRequest('Já existe quarto com esse numero.');
     }
   }
   return context;
@@ -37,8 +37,8 @@ export default {
     all: [authenticate('jwt')],
     find: [includeRelacoesFind],
     get: [includeRelacoesFind],
-    create: [verificaUnico],
-    update: [verificaUnico],
+    create: [verificaExistencia],
+    update: [verificaExistencia],
     patch: [],
     remove: []
   },

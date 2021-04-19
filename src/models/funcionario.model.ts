@@ -47,9 +47,10 @@ export default function (app: Application): typeof Model {
         isIn: [Object.keys(EstadoCivil)],
       },     
     },
-    cargo: {
-      type: DataTypes.STRING,
-      allowNull: false
+    cargoId: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      field: 'cargo_id',
     },
     rua: {
       type: DataTypes.STRING,
@@ -96,8 +97,12 @@ export default function (app: Application): typeof Model {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (funcionario as any).associate = function (models: any): void {
+    funcionario.belongsTo(models.cargo,
+      {
+        foreignKey: 'cargoId',
+        as: 'cargo'
+      });
     funcionario.hasOne(models.users, {
       foreignKey: 'funcionarioId',
       as: 'funcionario',
