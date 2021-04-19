@@ -17,7 +17,7 @@ export class Hospede extends BaseService {
     obj = new HospedeBuilder()
       .setNomeCompleto("João Silva")
       .setEmail("joaosilva@hotmail.com")
-      .setCep("124587953")
+      .setCpf("12.123.456-3")
       .setDataNascimento(new Date()) //Date
       .setSexo(Genero.MASCULINO) //Enum Genero
       .setEstadoCivil(EstadoCivil.CASADO) //Enum Estado Civil
