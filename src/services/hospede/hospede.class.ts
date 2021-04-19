@@ -18,9 +18,9 @@ export class Hospede extends BaseService {
       .setNomeCompleto("João Silva")
       .setEmail("joaosilva@hotmail.com")
       .setCep("124587953")
-      .setDataNascimento() //Date
-      .setSexo(Genero) //Enum Genero
-      .setEstadoCivil(EstadoCivil) //Enum Estado Civil
+      .setDataNascimento(new Date()) //Date
+      .setSexo(Genero.MASCULINO) //Enum Genero
+      .setEstadoCivil(EstadoCivil.CASADO) //Enum Estado Civil
       .setProfissao("Marceneiro")
       .setRua("Rua 01")
       .setBairro("Jardim Dias")

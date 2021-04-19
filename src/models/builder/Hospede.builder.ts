@@ -1,10 +1,12 @@
+import { EstadoCivil, Genero } from "../enum/usuario.enum";
+
 export class HospedeBuilder{
     private nomeCompleto!: string;
     private email!: string;
     private cpf!: string;
     private dataNascimento!: Date;
-    private sexo!: Enumerator;
-    private estadoCivil!: Enumerator;
+    private sexo!: Genero;
+    private estadoCivil!: EstadoCivil;
     private profissao!: string;
     private rua!: string;
     private bairro!: string;
@@ -57,7 +59,7 @@ export class HospedeBuilder{
         return this.sexo
     }
 
-    setSexo(value: Enumerator): HospedeBuilder {
+    setSexo(value: Genero): HospedeBuilder {
         this.sexo = value;
         return this;
     }
@@ -66,7 +68,7 @@ export class HospedeBuilder{
         return this.estadoCivil
     }
 
-    setEstadoCivil(value: Enumerator): HospedeBuilder {
+    setEstadoCivil(value: EstadoCivil): HospedeBuilder {
         this.estadoCivil = value;
         return this;
     }
@@ -158,21 +160,21 @@ export class HospedeBuilder{
 }
 
 export class HospedeClass {
-    private nomeCompleto!: string;
-    private email!: string;
-    private cpf!: string;
-    private dataNascimento!: Date;
-    private sexo!: Enumerator;
-    private estadoCivil!: Enumerator;
-    private profissao!: string;
-    private rua!: string;
-    private bairro!: string;
-    private numEndereco!: string;
-    private complemento!: string;
-    private cep!: string;
-    private cidade!: string;
-    private estado!: string;
-    private telefone!: string;
+    public nomeCompleto!: string;
+    public email!: string;
+    public cpf!: string;
+    public dataNascimento!: Date;
+    public sexo!: Genero;
+    public estadoCivil!: EstadoCivil;
+    public profissao!: string;
+    public rua!: string;
+    public bairro!: string;
+    public numEndereco!: string;
+    public complemento!: string;
+    public cep!: string;
+    public cidade!: string;
+    public estado!: string;
+    public telefone!: string;
 
     constructor(builder: HospedeBuilder) {
         this.nomeCompleto = builder.NomeCompleto
@@ -190,51 +192,5 @@ export class HospedeClass {
         this.cidade = builder.Cidade
         this.estado = builder.Estado
         this.telefone = builder.Telefone
-    }
-
-    get NomeCompleto() {
-        return this.nomeCompleto
-    }
-    get Email() {
-        return this.email
-    }
-    get Cpf() {
-        return this.cpf
-    }
-    get DataNascimento() {
-        return this.dataNascimento
-    }
-    get Sexo() {
-        return this.sexo
-    }
-    get EstadoCivil() {
-        return this.estadoCivil
-    }
-    get Profissao() {
-        return this.profissao
-    }
-    get Rua() {
-        return this.rua
-    }
-    get Bairro() {
-        return this.bairro
-    }
-    get NumEndereco() {
-        return this.numEndereco
-    }
-    get Complemento() {
-        return this.complemento
-    }
-    get Cep() {
-        return this.cep
-    }
-    get Cidade() {
-        return this.cidade
-    }
-    get Estado() {
-        return this.estado
-    }
-    get Telefone() {
-        return this.telefone
     }
 }
