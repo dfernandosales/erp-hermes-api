@@ -8,5 +8,7 @@ CREATE TABLE  public.reserva (
   data_inicio_reserva DATE NOT NULL,
   data_fim_reserva DATE NULL,
   valor_reserva INT NULL,
-  status TEXT
+  status TEXT,
+  users_id INT4 NULL,
+  CONSTRAINT reserva_users_fk FOREIGN KEY(users_id) REFERENCES users(id)
 );

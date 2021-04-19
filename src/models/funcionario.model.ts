@@ -103,6 +103,10 @@ export default function (app: Application): typeof Model {
         foreignKey: 'cargoId',
         as: 'cargo'
       });
+    funcionario.hasOne(models.users, {
+      foreignKey: 'funcionarioId',
+      as: 'funcionario',
+    }); 
   };
 
   return funcionario;
