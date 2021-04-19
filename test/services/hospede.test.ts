@@ -44,10 +44,10 @@ describe("Teste de criação de hóspedes", () => {
       .setSexo(Genero.MASCULINO) 
       .setEstadoCivil(EstadoCivil.CASADO) 
       .setProfissao("Tester")
-      .setRua("Rua 01")
+      //faltando a Rua
       .setBairro("Jardim Dias")
       .setNumEndereco("404")
-      .setComplemento("Em frente ao pé de Jambo")
+      .setComplemento("Em frente ao ponto")
       .setCep("87000500")
       .setCidade("Maringá")
       .setEstado("Paraná")
@@ -58,6 +58,24 @@ describe("Teste de criação de hóspedes", () => {
   })
 
   it('Criação com cpf repetido', async () =>{
-
+    const obj: HospedeClass = new HospedeBuilder()
+      .setNomeCompleto('teste3')
+      .setEmail("teste3@hotmail.com")
+      .setCpf("12.123.456-3")
+      .setDataNascimento(new Date()) 
+      .setSexo(Genero.FEMININO) 
+      .setEstadoCivil(EstadoCivil.CASADO) 
+      .setProfissao("Tester")
+      .setRua("Rua Cleiton")
+      .setBairro("Jardim Oasis")
+      .setNumEndereco("404")
+      .setComplemento("")
+      .setCep("87000500")
+      .setCidade("Maringá")
+      .setEstado("Paraná")
+      .setTelefone("44991144002")
+      .build();
+    
+    await assert.rejects((async () => { await app.service('hospede').create(obj) })());
   })
 })
