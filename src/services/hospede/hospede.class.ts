@@ -11,25 +11,25 @@ export class Hospede extends BaseService {
     super(options);
   }
   
-  async create(data: Partial<HospedeClass>, params?: Params): Promise<HospedeClass[] | Paginated<HospedeClass>> {
+  async create(data: HospedeClass, params?: Params): Promise<HospedeClass[] | Paginated<HospedeClass>> {
     let obj: HospedeClass;
     
     obj = new HospedeBuilder()
-      .setNomeCompleto("João Silva")
-      .setEmail("joaosilva@hotmail.com")
-      .setCpf("12.123.456-3")
-      .setDataNascimento(new Date()) //Date
-      .setSexo(Genero.MASCULINO) //Enum Genero
-      .setEstadoCivil(EstadoCivil.CASADO) //Enum Estado Civil
-      .setProfissao("Marceneiro")
-      .setRua("Rua 01")
-      .setBairro("Jardim Dias")
-      .setNumEndereco("404")
-      .setComplemento("Em frente ao pé de Jambo")
-      .setCep("87000500")
-      .setCidade("Maringá")
-      .setEstado("Paraná")
-      .setTelefone("44991144002")
+      .setNomeCompleto(data.nomeCompleto)
+      .setEmail(data.email)
+      .setCpf(data.cpf)
+      .setDataNascimento(data.dataNascimento) //Date
+      .setSexo(data.sexo) //Enum Genero
+      .setEstadoCivil(data.estadoCivil) //Enum Estado Civil
+      .setProfissao(data.profissao)
+      .setRua(data.rua)
+      .setBairro(data.bairro)
+      .setNumEndereco(data.numEndereco)
+      .setComplemento(data.complemento)
+      .setCep(data.cep)
+      .setCidade(data.cidade)
+      .setEstado(data.estado)
+      .setTelefone(data.telefone)
       .build();
       
     return super.create(obj);
