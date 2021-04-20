@@ -90,10 +90,17 @@ const validaDateAntes = async (context: HookContext): Promise<HookContext> => {
   return context;
 }
 
+const verificaDowload = (context: HookContext) => {
+  if (context.params.query?.$limit == 10000) {
+    context.params.query = { ...context.params.query, status: StatusReserva.FINALIZADA, $select: ["dataInicioReserva", "dataInicioReserva", "valorReserva"] }
+  }
+  return context;
+}
+
 export default {
   before: {
     all: [authenticate('jwt')],
-    find: [includeRelacoesFind],
+    find: [includeRelacoesFind, verificaDowload],
     get: [includeRelacoesFind],
     create: [validaDateAntes],
     update: [],

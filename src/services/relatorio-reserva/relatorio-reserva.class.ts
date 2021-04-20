@@ -19,21 +19,16 @@ export class RelatorioReservas implements ServiceMethods<Data> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find(params?: Params): Promise<Data[] | Paginated<Data>> {
     const reservaService = this.app.service('reserva');
-    if (params?.query?.$limit == 10000) {
-      params.query = { ...params.query, $select: ["dataInicioReserva", "dataInicioReserva", "valorReserva"] }
-      return reservaService.find(params)
-    } else {
-      const query = params?.query || {}
-      query.status = StatusReserva.FINALIZADA
+    const query = params?.query || {}
+    query.status = StatusReserva.FINALIZADA
 
-      if (query.dataInicioReserva) {
-        query.dataInicioReserva = { $gte: moment(query.dataInicioReserva).tz("America/Sao_Paulo").startOf("day").toDate() }
-      }
-      if (query.dataFimReserva) {
-        query.dataFimReserva = { $lte: moment(query.dataFimReserva).tz("America/Sao_Paulo").startOf("day").toDate() }
-      }
-      return reservaService.find(params)
+    if (query.dataInicioReserva) {
+      query.dataInicioReserva = { $gte: moment(query.dataInicioReserva).tz("America/Sao_Paulo").startOf("day").toDate() }
     }
+    if (query.dataFimReserva) {
+      query.dataFimReserva = { $lte: moment(query.dataFimReserva).tz("America/Sao_Paulo").startOf("day").toDate() }
+    }
+    return reservaService.find(params)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
