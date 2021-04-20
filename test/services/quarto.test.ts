@@ -12,9 +12,9 @@ describe('\'quarto\' service', () => {
   });
 });
 
-describe('teste criacao de quarto caminho feliz', () => {
-  it('create quarto, categoria-quarto', async () =>{
-    const categoriaQuarto = await app.service("categoria-quarto").create({ nome: "Teste Builder", valor: 250 });
+describe('Testes de criacao de quarto', () => {
+  it('Criacao de uma categoria de quarto e de um quarto', async () =>{
+    const categoriaQuarto = await app.service("categoria-quarto").create({ nome: "Teste CategoriaQuartoBuilder", valor: 250 });
     const obj: QuartoClass = new QuartoBuilder()
       .setCategoriaQuartoId(categoriaQuarto.id)
       .setNumero(1)
@@ -28,20 +28,29 @@ describe('teste criacao de quarto caminho feliz', () => {
     const quartos = (await app.service('quarto').find()) as Paginated<QuartoModel>;
     assert(quartos.total > 0)
   })
-
-  it('o numero do quarto deve ser 1', async () => {
+  
+  it('O Número do quarto criado deve ser 1', async () => {
     const quartos = (await app.service('quarto').find()) as Paginated<QuartoModel>;
-    quartos.data[0].numero === 1;
+    assert(quartos.data[0].numero === 1);
   })
-
-  it('a vacancia deve ser falsa', async()  => {
+  
+  it('A vacancia deve ser true', async()  => {
     const quartos = (await app.service('quarto').find()) as Paginated<QuartoModel>;
-    quartos.data[0].vacancia === false;
+    assert(quartos.data[0].vacancia === true);
   })
-
-  it("deve conseguir mudar a vacancia", async () => {
+  
+  it('Deve conseguir mudar a vacancia', async () => {
     const quartos = (await app.service('quarto').find()) as Paginated<QuartoModel>;
-    await app.service('quarto').patch(quartos.data[0].id, { vacancia: true })
-    assert(quartos.data[0].vacancia === true)
+    const att = await app.service('quarto').patch(quartos.data[0].id, { vacancia: false })
+    assert(att.vacancia === false)
+  })
+  
+  it('Tentativa de criar um quarto com um número já existente', async() => {
+    const obj: QuartoClass = new QuartoBuilder()
+      .setCategoriaQuartoId(1)
+      .setNumero(1)
+      .setVacancia(true)
+      .build();
+    await assert.rejects((async () => { await app.service('quarto').create(obj)}))
   })
 })

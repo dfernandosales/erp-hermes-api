@@ -1,7 +1,7 @@
 export class QuartoBuilder {
-    private numero!: number;
-    private vacancia!: Boolean;
-    private categoriaQuartoId!: number;
+    public numero!: number;
+    public vacancia!: Boolean;
+    public categoriaQuartoId!: number;
 
     constructor() {
     }
@@ -15,7 +15,7 @@ export class QuartoBuilder {
       return this.numero;
     }
 
-    setVacancia(value: boolean): QuartoBuilder {
+    setVacancia(value: Boolean): QuartoBuilder {
       this.vacancia = value;
       return this;
     }
@@ -39,23 +39,13 @@ export class QuartoBuilder {
 
 
 export class QuartoClass {
-    private numero!: number;
-    private vacancia: Boolean;
-    private categoriaQuartoId: number;
+    public numero!: number;
+    public vacancia: Boolean;
+    public categoriaQuartoId: number;
 
     constructor(builder: QuartoBuilder) {
       this.numero = builder.Numero;
       this.vacancia = builder.Vacancia;
       this.categoriaQuartoId = builder.CategoriaQuartoId;
-    }
-
-    get Numero() {
-      return this.numero;
-    }
-    get Vacancia() {
-      return this.vacancia;
-    }
-    get CategoriaQuartoId() {
-      return this.categoriaQuartoId;
     }
 }

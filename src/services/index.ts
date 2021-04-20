@@ -14,6 +14,7 @@ import ocupacaoChart from './ocupacao-chart/ocupacao-chart.service';
 import cargo from './cargo/cargo.service';
 import pagamento from './pagamento/pagamento.service';
 import folhaRecebimento from './folha-recebimento/folha-recebimento.service';
+import relatorioReservas from './relatorio-reserva/relatorio-reserva.service';
 import relatorioHospede from './relatorio-hospede/relatorio-hospede.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -33,5 +34,6 @@ export default function (app: Application): void {
   app.configure(cargo);
   app.configure(pagamento);
   app.configure(folhaRecebimento);
+  app.configure(relatorioReservas);
   app.configure(relatorioHospede);
 }
