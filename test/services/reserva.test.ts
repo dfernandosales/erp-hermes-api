@@ -5,6 +5,7 @@ import moment from "moment-timezone";
 import { ReservaBuilder, ReservaClass } from '../../src/models/builder';
 import { StatusReserva } from '../../src/models/enum/reservaEnum';
 import { ReservaModel } from '../../src/models/reserva.model';
+import { EstadoCivil, Genero } from '../../src/models/enum/usuario.enum';
 
 
 describe('\'reserva\' service', () => {
@@ -29,18 +30,18 @@ describe("teste de criacao de reserva caminho feliz ", () => {
       const hospede = await app.service("hospede").create({
         nomeCompleto: 'teste',
         email: 'teste@gmail.com',
-        cpf: '411.339.112-03',
-        dataNascimento: '1996-04-11T03:00:00.000Z',
-        sexo: 'MASCULINO',
-        estadoCivil: 'SOLTEIRO',
+        cpf: '422.369.118-07',
+        dataNascimento: new Date(),
+        sexo: Genero.MASCULINO,
+        estadoCivil: EstadoCivil.VIUVO,
         profissao: 'Desenvolvedor de Software',
         telefone: '(44)92341-7610',
         rua: 'Joao Martelosso',
         bairro: 'Maria Rosa',
         numEndereco: '416',
-        cep: '82560-000',
-        cidade: 'Maringa',
-        estado: 14
+        cep: '87160-000',
+        cidade: 'Mandaguacu',
+        estado: 'Acre'
       });
       const created: any = await app.service('reserva')._create(obj);
       await app.service('reserva-quarto').create({ reservaId: created.id, quartoId: quarto.id });
