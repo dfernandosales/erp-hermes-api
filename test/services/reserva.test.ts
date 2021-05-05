@@ -20,14 +20,14 @@ describe("teste de criacao de reserva caminho feliz ", () => {
   it('create categoria-quarto, quarto, reserva-quarto e reserva', async () => {
     try {
       const obj: ReservaClass = new ReservaBuilder()
-      .setDataInicioReserva(moment().tz("America/Sao_Paulo").startOf("day").toDate())
-      .setDataFimReserva(moment().tz("America/Sao_Paulo").startOf("day").toDate())
-      .setUserId(1)
-      .setStatus(StatusReserva.ABERTA)
-      .build();
+        .setDataInicioReserva(moment().tz("America/Sao_Paulo").startOf("day").toDate())
+        .setDataFimReserva(moment().tz("America/Sao_Paulo").startOf("day").toDate())
+        .setUserId(1)
+        .setStatus(StatusReserva.ABERTA)
+        .build();
       const categoriaQuarto = await app.service("categoria-quarto").create({ nome: "Teste Builder1", valor: 100 });
-      const quarto = await app.service("quarto").create({ categoriaQuartoId: categoriaQuarto.id, numero: '10' });
-      const hospede = await app.service("hospede").create({
+      const quarto: any = await app.service("quarto")._create({ categoriaQuartoId: categoriaQuarto.id, numero: '10' });
+      const hospede: any = await app.service("hospede").create({
         nomeCompleto: 'teste',
         email: 'teste@gmail.com',
         cpf: '422.369.118-07',
@@ -41,7 +41,8 @@ describe("teste de criacao de reserva caminho feliz ", () => {
         numEndereco: '416',
         cep: '87160-000',
         cidade: 'Mandaguacu',
-        estado: 'Acre'
+        estado: 'Acre',
+        complemento: "casa"
       });
       const created: any = await app.service('reserva')._create(obj);
       await app.service('reserva-quarto').create({ reservaId: created.id, quartoId: quarto.id });
@@ -62,13 +63,13 @@ describe("teste de criacao de reserva caminho feliz ", () => {
 
   it("verifica se possui quarto vinculado a essa reserva", async () => {
     const reserva = (await app.service('reserva').find()) as Paginated<ReservaModel>;
-    const reservaQuarto = (await app.service('reserva-quarto').find({query:{reservaId:reserva.data[0].id}})) as Paginated<any>;
+    const reservaQuarto = (await app.service('reserva-quarto').find({ query: { reservaId: reserva.data[0].id } })) as Paginated<any>;
     assert(reservaQuarto.total > 0)
   })
 
   it("verifica se possui hospede vinculado a essa reserva", async () => {
     const reserva = (await app.service('reserva').find()) as Paginated<ReservaModel>;
-    const reservaHospede = (await app.service('reserva-hospede').find({query:{reservaId:reserva.data[0].id}})) as Paginated<any>;
+    const reservaHospede = (await app.service('reserva-hospede').find({ query: { reservaId: reserva.data[0].id } })) as Paginated<any>;
     assert(reservaHospede.total > 0)
   })
 
@@ -105,8 +106,8 @@ describe("teste de criacao de reserva caminho feliz ", () => {
       .setDataFimReserva(moment().tz("America/Sao_Paulo").startOf("day").toDate())
       .setUserId(1)
       .build();
-    const created:any = await app.service('reserva')._create(obj);
-    const reserva = (await app.service('reserva').find({query:{id:created.id}})) as Paginated<ReservaModel>;
+    const created: any = await app.service('reserva')._create(obj);
+    const reserva = (await app.service('reserva').find({ query: { id: created.id } })) as Paginated<ReservaModel>;
     assert(reserva.total > 0);
   })
 })
